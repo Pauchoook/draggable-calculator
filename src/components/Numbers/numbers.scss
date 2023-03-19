@@ -1,0 +1,9 @@
+.numbers {
+  flex-wrap: wrap;
+  &__item {
+    flex: 0 1 72px;
+    &:nth-child(10) {
+      flex-basis: 152px;
+    }
+  }
+}
