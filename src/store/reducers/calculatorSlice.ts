@@ -35,7 +35,7 @@ const initialState: CalculatorState = {
       Component: Calculate,
     },
   ],
-  value: "0",
+  value: "",
 };
 
 export const calculatorSlice = createSlice({
@@ -61,7 +61,7 @@ export const calculatorSlice = createSlice({
 
         if (currentIndexComponent > -1 && dropIndexComponent > -1) {
           state.canvasComponents.splice(currentIndexComponent, 1); // удаляю текущий компонент
-          state.canvasComponents.splice(dropIndexComponent + 1, 0, currentComponent); // вставляю текущий компонент после наведенного
+          state.canvasComponents.splice(dropIndexComponent, 0, currentComponent); // вставляю текущий компонент после наведенного
         }
       }
     },
@@ -74,14 +74,19 @@ export const calculatorSlice = createSlice({
       }));
     },
     changeValue: (state, action) => {
-      state.value = action.payload;
+      state.value = action.payload.replace(/[^0-9,+,\-,:,,x,/]/g, "");
     },
     calculate: (state) => {
-      const calcValue = `${eval(state.value.replace(/x/g, "*").replace(/,/g, "."))}`;
-
-      if (state.value.slice(-2) === "/0") {
+      let calcValue = `${eval(state.value.replace(/x/g, "*").replace(/,/g, "."))}`;
+      if (!/[0-9]/.test(calcValue)) {
+        // если значение не содерджит цифр
         state.value = "Не определено";
       } else {
+        // округление после точки
+        if (calcValue.split(".")[1]?.length > 6) {
+          calcValue = Number(calcValue).toFixed(1);
+        }
+
         state.value = calcValue.replace(/\./g, ",");
       }
     },

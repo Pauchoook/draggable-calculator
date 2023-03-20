@@ -1,16 +1,24 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import {calculatorSlice} from "../../store/reducers/calculatorSlice";
+import { calculatorSlice } from "../../store/reducers/calculatorSlice";
 import { ComponentProps } from "../../types/components";
 import "./display.scss";
 
 const Display: React.FC<ComponentProps> = ({ onDragStart, onDrop, onDragLeave, onDragOver, onDragEnd, item }) => {
   const dispatch = useAppDispatch();
-  const {changeValue} = calculatorSlice.actions;
+  const { changeValue } = calculatorSlice.actions;
   const { value } = useAppSelector((state) => state.calculate);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentValue = e.target.value.replace(/[^0-9,+,\-,x,/]/g, "");
+    let currentValue = e.target.value;
+
+    if (/[x,/,\-,+,:,]/g.test(value.slice(-1)) && /[x,/,\-,+,:,]/g.test(currentValue.slice(-1))) {
+      currentValue = value.substring(0, value.length - 1) + currentValue.slice(-1);
+    } else if ((!value || value === "0") && !/[+,\-,:,,x,/]/.test(currentValue)) {
+      // убираю 0 в начале
+      currentValue = currentValue.substring(1);
+    }
+
     dispatch(changeValue(currentValue));
   };
 
@@ -29,7 +37,7 @@ const Display: React.FC<ComponentProps> = ({ onDragStart, onDrop, onDragLeave, o
         type="text"
         onChange={onChange}
         placeholder="0"
-        value={value}
+        value={value || 0}
         className={item.draggable ? "display__input disabled" : "display__input"}
       ></input>
     </div>

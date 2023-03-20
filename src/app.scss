@@ -26,12 +26,12 @@ body {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   &.line {
-    &::after { 
+    &::before { 
       position: absolute;
       content: '';
       left: -6px;
       right: -6px;
-      bottom: -8px;
+      top: -8px;
       height: 6px;
       background: url('./assets/line.svg') 0 0 / cover no-repeat;
     }

@@ -24,11 +24,13 @@ const Operations: React.FC<ComponentProps> = ({
     if (changeValue) {
       if (/[x,/,\-,+]/g.test(value.slice(-1))) {
         changeValue(value.substring(0, value.length - 1) + val);
+      } else if (!value || !/[0-9]/.test(value)) {
+        changeValue("0" + val);
       } else {
         changeValue(value + val);
       }
     }
-  }
+  };
 
   return (
     <div

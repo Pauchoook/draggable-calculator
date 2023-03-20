@@ -10,8 +10,11 @@ const Calculate: React.FC<ComponentProps> = ({ onDragOver, onDragStart, onDragLe
 
   const handlerClick = () => {
     const isLastNotNumber = isNaN(+value.slice(-1));
-    
-    if (isLastNotNumber) {
+    if (!value || value === "0") return;
+
+    if (!/[0-9]/.test(value)) {
+      dispatch(changeValue("0"));
+    } else if (isLastNotNumber) {
       dispatch(changeValue(value + 0));
     }
     dispatch(calculate());
